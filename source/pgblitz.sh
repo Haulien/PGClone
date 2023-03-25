@@ -33,7 +33,7 @@ while read p; do
   echo "" >> /pg/logs/pgblitz.log
   echo "Utilizing: $p" >> /pg/logs/pgblitz.log
 
-  rclone moveto "{{hdpath}}/downloads/" "{{hdpath}}/transfer/" \
+  gclone moveto "{{hdpath}}/downloads/" "{{hdpath}}/transfer/" \
   --config /pg/rclone/blitz.conf \
   --log-file=/pg/logs/pgblitz.log \
   --log-level ERROR --stats 5s --stats-file-name-length 0 \
@@ -50,7 +50,7 @@ while read p; do
   chown -R 1000:1000 "{{hdpath}}/move"
   chmod -R 775 "{{hdpath}}/move"
 
-  rclone moveto "{{hdpath}}/move" "${p}{{encryptbit}}:/" \
+  gclone moveto "{{hdpath}}/move" "${p}{{encryptbit}}:/" \
   --config /pg/rclone/blitz.conf \
   --log-file=/pg/logs/pgblitz.log \
   --log-level INFO --stats 5s --stats-file-name-length 0 \

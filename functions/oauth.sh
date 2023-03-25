@@ -61,8 +61,8 @@ else entype="sc"; fi
 
 PASSWORD=`cat /pg/rclone/pgclone.password`
 SALT=`cat /pg/rclone/pgclone.salt`
-ENC_PASSWORD=`rclone obscure "$PASSWORD"`
-ENC_SALT=`rclone obscure "$SALT"`
+ENC_PASSWORD=`gclone obscure "$PASSWORD"`
+ENC_SALT=`gclone obscure "$SALT"`
 
 rm -rf /pg/rclone/.${entype} 1>/dev/null 2>&1
 echo "" >> /pg/rclone/.${entype}

@@ -58,14 +58,14 @@ elif [[ "$typed" == "N" || "$typed" == "n" ]]; then mountsmenu
     statusmount
   fi
 
-  rclone config delete $type --config /pg/rclone/blitz.conf
+  gclone config delete $type --config /pg/rclone/blitz.conf
 
   encheck=$(cat /pg/rclone/pgclone.transport)
   if [[ "$encheck" == "sc" || "$encheck" == "gc" ]]; then
     if [ "$type" == "gc" ]; then
-    rclone config delete gcrypt --config /pg/rclone/blitz.conf; fi
+    gclone config delete gcrypt --config /pg/rclone/blitz.conf; fi
     if [ "$type" == "sd" ]; then
-    rclone config delete scrypt --config /pg/rclone/blitz.conf; fi
+    gclone config delete scrypt --config /pg/rclone/blitz.conf; fi
   fi
 
 tee <<-EOF
@@ -758,8 +758,8 @@ if [[ "$encheck" == "sc" || "$encheck" == "gc" ]]; then
 
   PASSWORD=`cat /pg/rclone/pgclone.password`
   SALT=`cat /pg/rclone/pgclone.salt`
-  ENC_PASSWORD=`rclone obscure "$PASSWORD"`
-  ENC_SALT=`rclone obscure "$SALT"`
+  ENC_PASSWORD=`gclone obscure "$PASSWORD"`
+  ENC_SALT=`gclone obscure "$SALT"`
   echo "" >> /pg/rclone/test.conf
   echo "[$entype]" >> /pg/rclone/test.conf
   echo "type = crypt" >> /pg/rclone/test.conf
@@ -788,7 +788,7 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
   sleep 1
-  rclone mkdir --config /pg/rclone/test.conf $type:/plexguide
+  gclone mkdir --config /pg/rclone/test.conf $type:/plexguide
 tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -796,7 +796,7 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  rcheck=$(rclone lsd --config /pg/rclone/test.conf $type: | grep -oP plexguide | head -n1)
+  rcheck=$(gclone lsd --config /pg/rclone/test.conf $type: | grep -oP plexguide | head -n1)
 
   if [ "$rcheck" != "plexguide" ];then
 tee <<-EOF

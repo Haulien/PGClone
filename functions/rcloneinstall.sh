@@ -8,12 +8,12 @@
 rcloneinstall () {
 
 # install what version of rclone
-rversion=1.53.2
+rversion=1.62.2
 
 rcheck1=$(rclone --version 2>&1)
 rcheck2=$(echo $rcheck1 | cut -c1-12)
 
-if [[ "rclone v$rversion" != "$rcheck2" ]]; then
+if [[ "gclone v$rversion" != "$rcheck2" ]]; then
 
 tee <<-EOF
 

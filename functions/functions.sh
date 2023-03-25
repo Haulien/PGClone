@@ -117,7 +117,7 @@ readrcloneconfig () {
 }
 
 rcloneconfig () {
-  rclone config --config /pg/rclone/blitz.conf
+  gclone config --config /pg/rclone/blitz.conf
 }
 
 keysprocessed () {

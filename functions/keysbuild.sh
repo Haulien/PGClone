@@ -139,8 +139,8 @@ team_drive = ${sdid}
 EOF
 
 if [[ "$transport" == "sc" || "$transport" == "sd" ]]; then
-encpassword=$(rclone obscure "${clonepassword}")
-encsalt=$(rclone obscure "${clonesalt}")
+encpassword=$(gclone obscure "${clonepassword}")
+encsalt=$(gclone obscure "${clonesalt}")
 
 tee >> /pg/var/.keys <<-EOF
 [GDSA${tempbuild}C]
