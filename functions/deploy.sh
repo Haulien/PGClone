@@ -9,38 +9,38 @@ deploysdrive () {
   deployblitzstartcheck # At Bottom - Ensure Keys Are Made
 
 # RCLONE BUILD
-echo "#------------------------------------------" > /pg/rclone/blitz.conf
-echo "#RClone Rewrite | Visit https://pgblitz.com" >> /pg/rclone/blitz.conf
-echo "#------------------------------------------" >> /pg/rclone/blitz.conf
+echo "#------------------------------------------" > /opt/rclone/blitz.conf
+echo "#RClone Rewrite | Visit https://pgblitz.com" >> /opt/rclone/blitz.conf
+echo "#------------------------------------------" >> /opt/rclone/blitz.conf
 
-cat /pg/rclone/.gd >> /pg/rclone/blitz.conf
+cat /opt/rclone/.gd >> /opt/rclone/blitz.conf
 
-if [[ $(cat "/pg/rclone/.gc") != "NOT-SET" ]]; then
+if [[ $(cat "/opt/rclone/.gc") != "NOT-SET" ]]; then
 echo ""
-cat /pg/rclone/.gc >> /pg/rclone/blitz.conf; fi
+cat /opt/rclone/.gc >> /opt/rclone/blitz.conf; fi
 
-cat /pg/rclone/.sd >> /pg/rclone/blitz.conf
+cat /opt/rclone/.sd >> /opt/rclone/blitz.conf
 
-if [[ $(cat "/pg/rclone/.sc") != "NOT-SET" ]]; then
+if [[ $(cat "/opt/rclone/.sc") != "NOT-SET" ]]; then
 echo ""
-cat /pg/rclone/.sc >> /pg/rclone/blitz.conf; fi
+cat /opt/rclone/.sc >> /opt/rclone/blitz.conf; fi
 
-cat /pg/var/.keys >> /pg/rclone/blitz.conf
+cat /opt/var/.keys >> /opt/rclone/blitz.conf
 
 deploydrives
 }
 
 deploygdrive () {
 # RCLONE BUILD
-echo "#------------------------------------------" > /pg/rclone/blitz.conf
-echo "#RClone Rewrite | Visit https://pgblitz.com" >> /pg/rclone/blitz.conf
-echo "#------------------------------------------" >> /pg/rclone/blitz.conf
+echo "#------------------------------------------" > /opt/rclone/blitz.conf
+echo "#RClone Rewrite | Visit https://pgblitz.com" >> /opt/rclone/blitz.conf
+echo "#------------------------------------------" >> /opt/rclone/blitz.conf
 
-cat /pg/rclone/.gd > /pg/rclone/blitz.conf
+cat /opt/rclone/.gd > /opt/rclone/blitz.conf
 
-if [[ $(cat "/pg/rclone/.gc") != "NOT-SET" ]]; then
+if [[ $(cat "/opt/rclone/.gc") != "NOT-SET" ]]; then
 echo ""
-cat /pg/rclone/.gc >> /pg/rclone/blitz.conf; fi
+cat /opt/rclone/.gc >> /opt/rclone/blitz.conf; fi
 deploydrives
 }
 
@@ -54,8 +54,8 @@ tee <<-EOF
 
 EOF
 
-if [ -e "/pg/logs/.drivelog" ]; then rm -rf /pg/logs/.drivelog; fi
-touch /pg/logs/.drivelog
+if [ -e "/opt/logs/.drivelog" ]; then rm -rf /opt/logs/.drivelog; fi
+touch /opt/logs/.drivelog
 
   if [[ "$transport" = "gd" ]]; then
     gdrivemod
@@ -79,8 +79,8 @@ touch /pg/logs/.drivelog
     multihdreadonly
   fi
 
-cat /pg/logs/.drivelog
-logcheck=$(cat /pg/logs/.drivelog | grep "Failed")
+cat /opt/logs/.drivelog
+logcheck=$(cat /opt/logs/.drivelog | grep "Failed")
 
 if [[ "$logcheck" == "" ]]; then
   if [[ "$transport" == "gd" || "$transport" == "gc" || "$transport" == "sd" || "$transport" == "sc" ]]; then executetransport; fi
@@ -113,81 +113,81 @@ fi
 ########################################################################################
 gdrivemod ()
 {
-  initial=$(gclone lsd --config /pg/rclone/blitz.conf gd: | grep -oP plexguide | head -n1)
+  initial=$(gclone lsd --config /opt/rclone/blitz.conf gd: | grep -oP plexguide | head -n1)
 
   if [[ "$initial" != "plexguide" ]]; then
-    gclone mkdir --config /pg/rclone/blitz.conf gd:/plexguide
-    initial=$(gclone lsd --config /pg/rclone/blitz.conf gd: | grep -oP plexguide | head -n1)
+    gclone mkdir --config /opt/rclone/blitz.conf gd:/plexguide
+    initial=$(gclone lsd --config /opt/rclone/blitz.conf gd: | grep -oP plexguide | head -n1)
   fi
 
-  if [[ "$initial" == "plexguide" ]]; then echo "GDRIVE :  Passed" >> /pg/logs/.drivelog; else echo "GDRIVE :  Failed" >> /pg/logs/.drivelog; fi
+  if [[ "$initial" == "plexguide" ]]; then echo "GDRIVE :  Passed" >> /opt/logs/.drivelog; else echo "GDRIVE :  Failed" >> /opt/logs/.drivelog; fi
 }
 sdrivemod ()
 {
-  initial=$(gclone lsd --config /pg/rclone/blitz.conf sd: | grep -oP plexguide | head -n1)
+  initial=$(gclone lsd --config /opt/rclone/blitz.conf sd: | grep -oP plexguide | head -n1)
 
   if [[ "tinitial" != "plexguide" ]]; then
-    gclone mkdir --config /pg/rclone/blitz.conf gd:/plexguide
-    initial=$(gclone lsd --config /pg/rclone/blitz.conf sd: | grep -oP plexguide | head -n1)
+    gclone mkdir --config /opt/rclone/blitz.conf gd:/plexguide
+    initial=$(gclone lsd --config /opt/rclone/blitz.conf sd: | grep -oP plexguide | head -n1)
   fi
 
-  if [[ "$initial" == "plexguide" ]]; then echo "SDRIVE :  Passed" >> /pg/logs/.drivelog; else echo "SDRIVE :  Failed" >> /pg/logs/.drivelog; fi
+  if [[ "$initial" == "plexguide" ]]; then echo "SDRIVE :  Passed" >> /opt/logs/.drivelog; else echo "SDRIVE :  Failed" >> /opt/logs/.drivelog; fi
 }
 gcryptmod ()
 {
-  c1initial=$(gclone lsd --config /pg/rclone/blitz.conf gd: | grep -oP encrypt | head -n1)
-  c2initial=$(gclone lsd --config /pg/rclone/blitz.conf gc: | grep -oP plexguide | head -n1)
+  c1initial=$(gclone lsd --config /opt/rclone/blitz.conf gd: | grep -oP encrypt | head -n1)
+  c2initial=$(gclone lsd --config /opt/rclone/blitz.conf gc: | grep -oP plexguide | head -n1)
 
   if [[ "$c1initial" != "encrypt" ]]; then
-    gclone mkdir --config /pg/rclone/blitz.conf gd:/encrypt
-    c1initial=$(gclone lsd --config /pg/rclone/blitz.conf gd: | grep -oP encrypt | head -n1)
+    gclone mkdir --config /opt/rclone/blitz.conf gd:/encrypt
+    c1initial=$(gclone lsd --config /opt/rclone/blitz.conf gd: | grep -oP encrypt | head -n1)
   fi
   if [[ "$c2initial" != "plexguide" ]]; then
-    gclone mkdir --config /pg/rclone/blitz.conf gc:/plexguide
-    c2initial=$(gclone lsd --config /pg/rclone/blitz.conf gc: | grep -oP plexguide | head -n1)
+    gclone mkdir --config /opt/rclone/blitz.conf gc:/plexguide
+    c2initial=$(gclone lsd --config /opt/rclone/blitz.conf gc: | grep -oP plexguide | head -n1)
   fi
 
-  if [[ "$c1initial" == "encrypt" ]]; then echo "GCRYPT1:  Passed" >> /pg/logs/.drivelog; else echo "GCRYPT1:  Failed" >> /pg/logs/.drivelog; fi
-  if [[ "$c2initial" == "plexguide" ]]; then echo "GCRYPT2:  Passed" >> /pg/logs/.drivelog; else echo "GCRYPT2:  Failed" >> /pg/logs/.drivelog; fi
+  if [[ "$c1initial" == "encrypt" ]]; then echo "GCRYPT1:  Passed" >> /opt/logs/.drivelog; else echo "GCRYPT1:  Failed" >> /opt/logs/.drivelog; fi
+  if [[ "$c2initial" == "plexguide" ]]; then echo "GCRYPT2:  Passed" >> /opt/logs/.drivelog; else echo "GCRYPT2:  Failed" >> /opt/logs/.drivelog; fi
 }
 scryptmod ()
 {
-  c1initial=$(gclone lsd --config /pg/rclone/blitz.conf sd: | grep -oP encrypt | head -n1)
-  c2initial=$(gclone lsd --config /pg/rclone/blitz.conf sc: | grep -oP plexguide | head -n1)
+  c1initial=$(gclone lsd --config /opt/rclone/blitz.conf sd: | grep -oP encrypt | head -n1)
+  c2initial=$(gclone lsd --config /opt/rclone/blitz.conf sc: | grep -oP plexguide | head -n1)
 
   if [[ "$c1initial" != "encrypt" ]]; then
-    gclone mkdir --config /pg/rclone/blitz.conf sd:/encrypt
-    c1initial=$(gclone lsd --config /pg/rclone/blitz.conf sd: | grep -oP encrypt | head -n1)
+    gclone mkdir --config /opt/rclone/blitz.conf sd:/encrypt
+    c1initial=$(gclone lsd --config /opt/rclone/blitz.conf sd: | grep -oP encrypt | head -n1)
   fi
   if [[ "$c2initial" != "plexguide" ]]; then
-    gclone mkdir --config /pg/rclone/blitz.conf sc:/plexguide
-    c2initial=$(gclone lsd --config /pg/rclone/blitz.conf sc: | grep -oP plexguide | head -n1)
+    gclone mkdir --config /opt/rclone/blitz.conf sc:/plexguide
+    c2initial=$(gclone lsd --config /opt/rclone/blitz.conf sc: | grep -oP plexguide | head -n1)
   fi
 
-  if [[ "$c1initial" == "encrypt" ]]; then echo "SCRYPT1:  Passed" >> /pg/logs/.drivelog; else echo "SCRYPT1:  Failed" >> /pg/logs/.drivelog; fi
-  if [[ "$c2initial" == "plexguide" ]]; then echo "SCRYPT2:  Passed" >> /pg/logs/.drivelog; else echo "SCRYPT2:  Failed" >> /pg/logs/.drivelog; fi
+  if [[ "$c1initial" == "encrypt" ]]; then echo "SCRYPT1:  Passed" >> /opt/logs/.drivelog; else echo "SCRYPT1:  Failed" >> /opt/logs/.drivelog; fi
+  if [[ "$c2initial" == "plexguide" ]]; then echo "SCRYPT2:  Passed" >> /opt/logs/.drivelog; else echo "SCRYPT2:  Failed" >> /opt/logs/.drivelog; fi
 }
 gdsamod ()
 {
-  initial=$(gclone lsd --config /pg/rclone/blitz.conf GDSA01: | grep -oP plexguide | head -n1)
+  initial=$(gclone lsd --config /opt/rclone/blitz.conf GDSA01: | grep -oP plexguide | head -n1)
 
   if [[ "$initial" != "plexguide" ]]; then
-    gclone mkdir --config /pg/rclone/blitz.conf GDSA01:/plexguide
-    initial=$(gclone lsd --config /pg/rclone/blitz.conf GDSA01: | grep -oP plexguide | head -n1)
+    gclone mkdir --config /opt/rclone/blitz.conf GDSA01:/plexguide
+    initial=$(gclone lsd --config /opt/rclone/blitz.conf GDSA01: | grep -oP plexguide | head -n1)
   fi
 
-  if [[ "$initial" == "plexguide" ]]; then echo "GDSA01 :  Passed" >> /pg/logs/.drivelog; else echo "GDSA01 :  Failed" >> /pg/logs/.drivelog; fi
+  if [[ "$initial" == "plexguide" ]]; then echo "GDSA01 :  Passed" >> /opt/logs/.drivelog; else echo "GDSA01 :  Failed" >> /opt/logs/.drivelog; fi
 }
 gdsacryptmod ()
 {
-  initial=$(gclone lsd --config /pg/rclone/blitz.conf GDSA01C: | grep -oP encrypt | head -n1)
+  initial=$(gclone lsd --config /opt/rclone/blitz.conf GDSA01C: | grep -oP encrypt | head -n1)
 
   if [[ "$initial" != "plexguide" ]]; then
-    gclone mkdir --config /pg/rclone/blitz.conf GDSA01C:/plexguide
-    initial=$(gclone lsd --config /pg/rclone/blitz.conf GDSA01C: | grep -oP plexguide | head -n1)
+    gclone mkdir --config /opt/rclone/blitz.conf GDSA01C:/plexguide
+    initial=$(gclone lsd --config /opt/rclone/blitz.conf GDSA01C: | grep -oP plexguide | head -n1)
   fi
 
-  if [[ "$initial" == "plexguide" ]]; then echo "GDSA01C:  Passed" >> /pg/logs/.drivelog; else echo "GDSA01C:  Failed" >> /pg/logs/.drivelog; fi
+  if [[ "$initial" == "plexguide" ]]; then echo "GDSA01C:  Passed" >> /opt/logs/.drivelog; else echo "GDSA01C:  Failed" >> /opt/logs/.drivelog; fi
 }
 ################################################################################
 deployblitzstartcheck () {

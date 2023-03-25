@@ -62,7 +62,7 @@ tee <<-EOF
 
 EOF
   read -rp '↘️  Type a Speed from 1 - 1000 | Press [ENTER]: ' typed < /dev/tty
-  if [[ "$typed" -ge "1" && "$typed" -le "1000" ]]; then echo "$typed" > /pg/var/blitz.bw
+  if [[ "$typed" -ge "1" && "$typed" -le "1000" ]]; then echo "$typed" > /opt/var/blitz.bw
 else setthrottleblitz; fi
 }
 
@@ -78,7 +78,7 @@ tee <<-EOF
 
 EOF
   read -rp '↘️  Type a Speed from 1 - 1000 | Press [ENTER]: ' typed < /dev/tty
-  if [[ "$typed" -ge "1" && "$typed" -le "1000" ]]; then echo "$typed" > /pg/var/move.bw
+  if [[ "$typed" -ge "1" && "$typed" -le "1000" ]]; then echo "$typed" > /opt/var/move.bw
 else setthrottlemove; fi
 }
 
@@ -99,30 +99,30 @@ removepgservices () {
 }
 
 readrcloneconfig () {
-  touch /pg/rclone/blitz.conf
-  mkdir -p /pg/rclone/
+  touch /opt/rclone/blitz.conf
+  mkdir -p /opt/rclone/
 
-  gdcheck=$(cat /pg/rclone/blitz.conf | grep gdrive)
-  if [ "$gdcheck" != "" ]; then echo "good" > /pg/rclone/gdrive.status && gdstatus="good";
-  else echo "bad" > /pg/rclone/gdrive.status && gdstatus="bad"; fi
+  gdcheck=$(cat /opt/rclone/blitz.conf | grep gdrive)
+  if [ "$gdcheck" != "" ]; then echo "good" > /opt/rclone/gdrive.status && gdstatus="good";
+  else echo "bad" > /opt/rclone/gdrive.status && gdstatus="bad"; fi
 
-  gccheck=$(cat /pg/rclone/blitz.conf | grep "remote = gd:/encrypt")
-  if [ "$gccheck" != "" ]; then echo "good" > /pg/rclone/gcrypt.status && gcstatus="good";
-  else echo "bad" > /pg/rclone/gcrypt.status && gcstatus="bad"; fi
+  gccheck=$(cat /opt/rclone/blitz.conf | grep "remote = gd:/encrypt")
+  if [ "$gccheck" != "" ]; then echo "good" > /opt/rclone/gcrypt.status && gcstatus="good";
+  else echo "bad" > /opt/rclone/gcrypt.status && gcstatus="bad"; fi
 
-  tdcheck=$(cat /pg/rclone/blitz.conf | grep sdrive)
-  if [ "$tdcheck" != "" ]; then echo "good" > /pg/rclone/sdrive.status && tdstatus="good"
-  else echo "bad" > /pg/rclone/sdrive.status && tdstatus="bad"; fi
+  tdcheck=$(cat /opt/rclone/blitz.conf | grep sdrive)
+  if [ "$tdcheck" != "" ]; then echo "good" > /opt/rclone/sdrive.status && tdstatus="good"
+  else echo "bad" > /opt/rclone/sdrive.status && tdstatus="bad"; fi
 
 }
 
 rcloneconfig () {
-  gclone config --config /pg/rclone/blitz.conf
+  gclone config --config /opt/rclone/blitz.conf
 }
 
 keysprocessed () {
-  mkdir -p /pg/var/keys/processed
-  ls -1 /pg/var/keys/processed | wc -l > /pg/var/project.keycount
+  mkdir -p /opt/var/keys/processed
+  ls -1 /opt/var/keys/processed | wc -l > /opt/var/project.keycount
 }
 
 deletemelateron () {

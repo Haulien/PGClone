@@ -13,14 +13,14 @@ After=multi-user.target
 Type=simple
 User=0
 Group=0
-ExecStart=/usr/bin/gclone mount {{drive}}: /pg/{{drive}} \
---config /pg/rclone/blitz.conf \
+ExecStart=/usr/bin/gclone mount {{drive}}: /opt/{{drive}} \
+--config /opt/rclone/blitz.conf \
 --allow-non-empty \
 --allow-other \
 --size-only \
 --uid=1000 --gid=1000 \
 --umask 002 \
---log-file=/pg/logs/{{drive}}.log \
+--log-file=/opt/logs/{{drive}}.log \
 --log-level INFO \
 --timeout 1h \
 --drive-use-trash=false \
@@ -32,7 +32,7 @@ ExecStart=/usr/bin/gclone mount {{drive}}: /pg/{{drive}} \
 --user-agent={{uagent.stdout}} \
 --buffer-size {{bs}}
 
-ExecStop=/bin/fusermount -uz /pg/{{drive}}
+ExecStop=/bin/fusermount -uz /opt/{{drive}}
 TimeoutStopSec=20
 KillMode=process
 RemainAfterExit=yes

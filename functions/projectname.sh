@@ -86,7 +86,7 @@ if [[ "$typed" == "Exit" || "$typed" == "exit" || "$typed" == "EXIT" ]]; then cl
 
 # Repeats if Users Fails the Range
 if [[ "$typed" -ge "1" && "$typed" -le "$pnum" ]]; then
-existingnumber=$(cat /pg/var/prolist/$typed)
+existingnumber=$(cat /opt/var/prolist/$typed)
 
 echo
 gcloud config set project ${existingnumber} --account=${pgcloneemail}
@@ -102,7 +102,7 @@ gcloud services enable drive.googleapis.com --project ${existingnumber} --accoun
 else exisitingproject; fi
 echo
 read -p '↘️  Existing Project Set | Press [ENTER] ' typed < /dev/tty
-echo "${existingnumber}" > /pg/rclone/pgclone.project
+echo "${existingnumber}" > /opt/rclone/pgclone.project
 clonestart
 }
 
@@ -125,10 +125,10 @@ if [[ "$typed" == "Exit" || "$typed" == "exit" || "$typed" == "EXIT" ]]; then op
 
 # Repeats if Users Fails the Range
 if [[ "$typed" -ge "1" && "$typed" -le "$pnum" ]]; then
-destroynumber=$(cat /pg/var/prolist/$typed)
+destroynumber=$(cat /opt/var/prolist/$typed)
 
   # Cannot Destroy Active Project
-  if [[ $(cat /pg/rclone/pgclone.project) == "$destroynumber" ]]; then
+  if [[ $(cat /opt/rclone/pgclone.project) == "$destroynumber" ]]; then
   echo
   read -p '↘️  Unable to Destroy an Active Project | Press [ENTER] ' typed < /dev/tty
   destroyproject
@@ -144,17 +144,17 @@ optionsmenu
 
 projectlist () {
 pnum=0
-mkdir -p /pg/var/prolist
-rm -rf /pg/var/prolist/* 1>/dev/null 2>&1
+mkdir -p /opt/var/prolist
+rm -rf /opt/var/prolist/* 1>/dev/null 2>&1
 
-gcloud projects list --account=${pgcloneemail} | tail -n +2 | awk '{print $1}' > /pg/var/prolist/prolist.sh
+gcloud projects list --account=${pgcloneemail} | tail -n +2 | awk '{print $1}' > /opt/var/prolist/prolist.sh
 
 while read p; do
   let "pnum++"
-  echo "$p" > "/pg/var/prolist/$pnum"
-  echo "[$pnum] $p" >> /pg/var/prolist/final.sh
+  echo "$p" > "/opt/var/prolist/$pnum"
+  echo "[$pnum] $p" >> /opt/var/prolist/final.sh
   echo "[$pnum] ${filler}${p}"
-done </pg/var/prolist/prolist.sh
+done </opt/var/prolist/prolist.sh
 }
 
 projectnamecheck () {
@@ -254,7 +254,7 @@ tee <<-EOF
 EOF
 
 gcloud services enable drive.googleapis.com --project $projectid --account=${pgcloneemail}
-echo "$projectid" > /pg/rclone/pgclone.project
+echo "$projectid" > /opt/rclone/pgclone.project
 
 tee <<-EOF
 
@@ -262,15 +262,15 @@ tee <<-EOF
 🚀 PG Clone - Resetting Prior Stored Information
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-rm -rf /pg/rclone/pgclone.secret 1>/dev/null 2>&1
-rm -rf /pg/rclone/pgclone.public 1>/dev/null 2>&1
-rm -rf /pg/rclone/pgclone.secret 1>/dev/null 2>&1
-rm -rf /pg/rclone/.sd 1>/dev/null 2>&1
-rm -rf /pg/rclone/.gd 1>/dev/null 2>&1
-rm -rf /pg/rclone/.gc 1>/dev/null 2>&1
-rm -rf /pg/rclone/.sc 1>/dev/null 2>&1
-rm -rf /pg/rclone/pgclone.teamdrive 1>/dev/null 2>&1
-rm -rf /pg/rclone/deployed.version 1>/dev/null 2>&1
+rm -rf /opt/rclone/pgclone.secret 1>/dev/null 2>&1
+rm -rf /opt/rclone/pgclone.public 1>/dev/null 2>&1
+rm -rf /opt/rclone/pgclone.secret 1>/dev/null 2>&1
+rm -rf /opt/rclone/.sd 1>/dev/null 2>&1
+rm -rf /opt/rclone/.gd 1>/dev/null 2>&1
+rm -rf /opt/rclone/.gc 1>/dev/null 2>&1
+rm -rf /opt/rclone/.sc 1>/dev/null 2>&1
+rm -rf /opt/rclone/pgclone.teamdrive 1>/dev/null 2>&1
+rm -rf /opt/rclone/deployed.version 1>/dev/null 2>&1
 
 docker stop jellyfin 1>/dev/null 2>&1
 docker stop plex 1>/dev/null 2>&1

@@ -11,7 +11,7 @@
 executetransport () {
 
 # Reset Front Display
-rm -rf  /pg/rclone/deployed.version
+rm -rf  /opt/rclone/deployed.version
 
 # Call Variables
 pgclonevars
@@ -20,7 +20,7 @@ pgclonevars
 ansible-playbook /opt/pgclone/ymls/remove.yml
 
 ########################################################### GDRIVE START
-echo "gd" > /pg/rclone/deployed.version
+echo "gd" > /opt/rclone/deployed.version
 type=gd
 ansible-playbook /opt/pgclone/ymls/mount.yml -e "\
   bs=$bs
@@ -35,7 +35,7 @@ ansible-playbook /opt/pgclone/ymls/mount.yml -e "\
 ########################################################### SDRIVE END
 if [[ "$transport" == "gc" || "$transport" == "sc" || "$transport" == "sd" ]]; then
 type=sd
-echo "sd" > /pg/rclone/deployed.version
+echo "sd" > /opt/rclone/deployed.version
 encryptbit=""
 ansible-playbook /opt/pgclone/ymls/mount.yml -e "\
   bs=$bs
@@ -51,7 +51,7 @@ fi
 
 ########################################################### ENCRYTPION START
 if [[ "$transport" == "gc" || "$transport" == "sc" ]]; then
-echo "gc" > /pg/rclone/deployed.version
+echo "gc" > /opt/rclone/deployed.version
 type=gc
 ansible-playbook /opt/pgclone/ymls/crypt.yml -e "\
   bs=$bs
@@ -64,7 +64,7 @@ ansible-playbook /opt/pgclone/ymls/crypt.yml -e "\
 fi
 
 if [[ "$transport" == "sc" ]]; then
-echo "sc" > /pg/rclone/deployed.version
+echo "sc" > /opt/rclone/deployed.version
 type=sc
 encryptbit="C"
 ansible-playbook /opt/pgclone/ymls/crypt.yml -e "\
@@ -80,14 +80,14 @@ fi
 
 # builds the list
 if [[ "$transport" == "sd" || "$transport" == "sc" ]]; then
-  ls -la /pg/var/.blitzkeys/ | awk '{print $9}' | tail -n +4 | sort | uniq > /pg/var/.blitzlist
-  rm -rf /pg/var/.blitzfinal 1>/dev/null 2>&1
-  touch /pg/var/.blitzbuild
+  ls -la /opt/var/.blitzkeys/ | awk '{print $9}' | tail -n +4 | sort | uniq > /opt/var/.blitzlist
+  rm -rf /opt/var/.blitzfinal 1>/dev/null 2>&1
+  touch /opt/var/.blitzbuild
   while read p; do
-    echo $p > /pg/var/.blitztemp
-    blitzcheck=$(grep "GDSA" /pg/var/.blitztemp)
-    if [[ "$blitzcheck" != "" ]]; then echo $p >> /pg/var/.blitzfinal; fi
-  done </pg/var/.blitzlist
+    echo $p > /opt/var/.blitztemp
+    blitzcheck=$(grep "GDSA" /opt/var/.blitztemp)
+    if [[ "$blitzcheck" != "" ]]; then echo $p >> /opt/var/.blitzfinal; fi
+  done </opt/var/.blitzlist
 fi
 
 # deploy union

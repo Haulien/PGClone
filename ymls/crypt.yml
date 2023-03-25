@@ -10,13 +10,13 @@
   gather_facts: false
   tasks:
 
-    - name: "Creating Folder - /pg/{{drive}}"
+    - name: "Creating Folder - /opt/{{drive}}"
       file: 'path={{item}} state=directory mode=0775 owner=1000 group=1000'
       with_items:
-        - "/pg/{{drive}}"
+        - "/opt/{{drive}}"
 
     - name: Register Agent
-      shell: 'cat /pg/var/uagent'
+      shell: 'cat /opt/var/uagent'
       register: uagent
 
     - name: "Install - Service {{drive}}"

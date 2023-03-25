@@ -54,7 +54,7 @@ ansible-playbook /opt/pgclone/ymls/crypt.yml -e "\
   rcsl=$rcsl
   drive=gc"
 
-echo "sc" > /pg/rclone/deployed.version
+echo "sc" > /opt/rclone/deployed.version
 type=sc
 encryptbit="C"
 ansible-playbook /opt/pgclone/ymls/crypt.yml -e "\
@@ -68,14 +68,14 @@ ansible-playbook /opt/pgclone/ymls/crypt.yml -e "\
 fi
 
 # builds the list
-ls -la /pg/var/.blitzkeys/ | awk '{print $9}' | tail -n +4 | sort | uniq > /pg/var/.blitzlist
-rm -rf /pg/var/.blitzfinal 1>/dev/null 2>&1
-touch /pg/var/.blitzbuild
+ls -la /opt/var/.blitzkeys/ | awk '{print $9}' | tail -n +4 | sort | uniq > /opt/var/.blitzlist
+rm -rf /opt/var/.blitzfinal 1>/dev/null 2>&1
+touch /opt/var/.blitzbuild
 while read p; do
-  echo $p > /pg/var/.blitztemp
-  blitzcheck=$(grep "GDSA" /pg/var/.blitztemp)
-  if [[ "$blitzcheck" != "" ]]; then echo $p >> /pg/var/.blitzfinal; fi
-done </pg/var/.blitzlist
+  echo $p > /opt/var/.blitztemp
+  blitzcheck=$(grep "GDSA" /opt/var/.blitztemp)
+  if [[ "$blitzcheck" != "" ]]; then echo $p >> /opt/var/.blitzfinal; fi
+done </opt/var/.blitzlist
 
 # deploy union
 ansible-playbook /opt/pgclone/ymls/pgunity.yml -e "\

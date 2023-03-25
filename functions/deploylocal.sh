@@ -23,11 +23,11 @@ ansible-playbook /opt/pgclone/ymls/remove.yml
 multihdreadonly
 
 # deploy union
-multihds=$(cat /pg/var/.tmp.multihd)
+multihds=$(cat /opt/var/.tmp.multihd)
 ansible-playbook /opt/pgclone/ymls/local.yml -e "multihds=$multihds hdpath=$hdpath"
 
 # stores deployed version
-echo "le" > /pg/rclone/deployed.version
+echo "le" > /opt/rclone/deployed.version
 
 # display edition final
 tee <<-EOF

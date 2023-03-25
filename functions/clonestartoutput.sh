@@ -81,15 +81,15 @@ pgclonevars
 
 # pull throttle speeds based on role
 if [[ "$transport" == "gd" || "$transport" == "gc" ]]; then
-throttle=$(cat /pg/var/move.bw)
+throttle=$(cat /opt/var/move.bw)
 output1="[C] Transport Select"
 else
-throttle=$(cat /pg/var/blitz.bw)
+throttle=$(cat /opt/var/blitz.bw)
 output1="[C] Options"
 fi
 
 if [[ "$transport" != "gd" && "$transport" != "gc" && "$transport" != "sd" && "$transport" != "sc" && "$transport" != "le" ]]; then
-rm -rf /pg/rclone/pgclone.transport 1>/dev/null 2>&1
+rm -rf /opt/rclone/pgclone.transport 1>/dev/null 2>&1
 mustset; fi
 
     if [[ "$transport" == "gd" ]]; then outputversion="GDrive Unencrypted"
@@ -149,7 +149,7 @@ localstartoutput () {
   1 )
       executelocal ;;
   2 )
-      bash /pg/pgblitz/menu/pgcloner/multihd.sh ;;
+      bash /opt/pgblitz/menu/pgcloner/multihd.sh ;;
   3 )
       transportselect ;;
   z )
@@ -169,7 +169,7 @@ if [[ "$transport" == "gd" ]]; then
           keyinputpublic ;;
       2 )
           publicsecretchecker
-          echo "gd" > /pg/rclone/deploy.version
+          echo "gd" > /opt/rclone/deploy.version
           oauth ;;
       z )
           exit ;;
@@ -206,7 +206,7 @@ elif [[ "$transport" == "gc" ]]; then
       3 )
           publicsecretchecker
           passwordcheck
-          echo "gd" > /pg/rclone/deploy.version
+          echo "gd" > /opt/rclone/deploy.version
           oauth ;;
       z )
           exit ;;
@@ -249,11 +249,11 @@ elif [[ "$transport" == "sd" ]]; then
         5 )
             publicsecretchecker
             tlabelchecker
-            echo "sd" > /pg/rclone/deploy.version
+            echo "sd" > /opt/rclone/deploy.version
             oauth ;;
         6 )
             publicsecretchecker
-            echo "gd" > /pg/rclone/deploy.version
+            echo "gd" > /opt/rclone/deploy.version
             oauth ;;
         7 )
             publicsecretchecker
@@ -318,12 +318,12 @@ elif [[ "$transport" == "sc" ]]; then
             publicsecretchecker
             passwordcheck
             tlabelchecker
-            echo "sc" > /pg/rclone/deploy.version
+            echo "sc" > /opt/rclone/deploy.version
             oauth ;;
         7 )
             publicsecretchecker
             passwordcheck
-            echo "sc" > /pg/rclone/deploy.version
+            echo "sc" > /opt/rclone/deploy.version
             oauth ;;
 
         8 )
@@ -413,7 +413,7 @@ case $typed in
       2 )
           mountnumbers ;;
       3 )
-          bash /pg/pgblitz/menu/pgcloner/multihd.sh ;;
+          bash /opt/pgblitz/menu/pgcloner/multihd.sh ;;
       4 )
           deletekeys ;;
       5 )
@@ -463,7 +463,7 @@ case $typed in
       2 )
           mountnumbers ;;
       3 )
-          bash /pg/pgblitz/menu/pgcloner/multihd.sh ;;
+          bash /opt/pgblitz/menu/pgcloner/multihd.sh ;;
       4 )
           cloneclean ;;
       5 )
@@ -479,8 +479,8 @@ optionsmenu
 }
 
 demomode () {
-  if [[ "$demo" = "OFF" ]]; then echo "ON " > /pg/rclone/pgclone.demo
-  else echo "OFF" > /pg/rclone/pgclone.demo; fi
+  if [[ "$demo" = "OFF" ]]; then echo "ON " > /opt/rclone/pgclone.demo
+  else echo "OFF" > /opt/rclone/pgclone.demo; fi
 
 pgclonevars
 tee <<-EOF
