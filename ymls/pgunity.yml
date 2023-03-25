@@ -173,10 +173,7 @@
         name: pgunity
 
     - name: 'Waiting for PGUnity to initialize'
-      wait_for:
-        path: /opt/unity/plexguide
-        timeout: 15
-        delay: 2
+      wait_for: timeout=2
 
     - name: Register HD Path
       shell: 'cat /pg/var/server.hd.path'
