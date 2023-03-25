@@ -16,7 +16,7 @@
         - "/opt/{{drive}}"
 
     - name: Register Agent
-      shell: 'cat /opt/var/uagent'
+      shell: 'cat /pg/var/uagent'
       register: uagent
 
     - name: "Install - Service {{drive}}"

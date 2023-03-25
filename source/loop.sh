@@ -15,14 +15,14 @@ echo "PGBlitz Log - First Startup" >> /opt/logs/transfer.log
 rm -rf /opt/logs/.transfer_list
 rm -rf /opt/logs/.temp_list
 
-var1=$(cat /opt/rclone/deployed.version)
+var1=$(cat /pg/rclone/deployed.version)
 if [[ "$var1" == "gd" ]]; then var2="GDrive Unencrypted"
 elif [[ "$var1" == "gc" ]]; then var2="GDrive Encrypted"
 elif [[ "$var1" == "sd" ]]; then var2="SDrive Unencrypted"
 elif [[ "$var1" == "sc" ]]; then var2="SDrive Encrypted"; fi
 
 if [[ "$var1" == "sd" || "$var1" == "sc" ]]; then
-  blitzcount=$(wc -l /opt/var/.blitzlist | awk '{print $1}')
+  blitzcount=$(wc -l /pg/var/.blitzlist | awk '{print $1}')
   keyloop=0
 fi
 
@@ -34,22 +34,22 @@ while [[ "$admin9705" == "9705" ]]; do
 
   if [[ "$var1" == "sd" || "$var1" == "sc" ]]; then
     let keyloop++
-    echo "$keyloop" > /opt/rclone/keyloop
-    currentkey=$(sed -n "${keyloop}p" /opt/var/.blitzlist)
-    echo "$currentkey" > /opt/rclone/currentkey
+    echo "$keyloop" > /pg/rclone/keyloop
+    currentkey=$(sed -n "${keyloop}p" /pg/var/.blitzlist)
+    echo "$currentkey" > /pg/rclone/currentkey
     echo "Shared Key   - $currentkey" >> /opt/logs/transfer.log
     if [[ "$keyloop" -ge "$blitzcount" ]]; then keyloop=0; fi
   fi
 
   echo "" >> /opt/logs/transfer.log
-  bash /opt/rclone/transfer.sh
+  bash /pg/rclone/transfer.sh
 
   # cat /opt/logs/transfer.log | tail -200 > /opt/logs/transfer.log
   echo "" >> /opt/logs/transfer.log
   echo "Cycle $cyclecount Complete - Sleeping 5 Seconds" >> /opt/logs/transfer.log
   echo "" >> /opt/logs/transfer.log
   sleep 2
-  primepath="$(cat /opt/var/hd.path)"
+  primepath="$(cat /pg/var/hd.path)"
   find "$primepath/transfer" -mindepth 1 -type d -mmin +1 -empty -delete
 
 done

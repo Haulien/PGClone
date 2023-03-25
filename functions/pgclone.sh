@@ -17,7 +17,7 @@ tee <<-EOF
 
 EOF
   read -p '↘️  Type a Speed from 1 - 1000 | Press [ENTER]: ' typed < /dev/tty
-  if [[ "$typed" -ge "1" && "$typed" -le "1000" ]]; then echo "$typed" > /opt/var/move.bw && question1;
+  if [[ "$typed" -ge "1" && "$typed" -le "1000" ]]; then echo "$typed" > /pg/var/move.bw && question1;
   else badinput && bandwidth; fi
 }
 
@@ -33,12 +33,12 @@ tee <<-EOF
 
 EOF
   read -p '↘️  Type a Speed from 1 - 1000 | Press [ENTER]: ' typed < /dev/tty
-  if [[ "$typed" -ge "1" && "$typed" -le "1000" ]]; then echo "$typed" > /opt/var/blitz.bw && question1;
+  if [[ "$typed" -ge "1" && "$typed" -le "1000" ]]; then echo "$typed" > /pg/var/blitz.bw && question1;
   else badinput && bandwidth; fi
 }
 
 statusmount () {
-  mcheck5=$(cat /opt/rclone/blitz.conf | grep "$type")
+  mcheck5=$(cat /pg/rclone/blitz.conf | grep "$type")
   if [ "$mcheck5" != "" ]; then
 tee <<-EOF
 
@@ -58,14 +58,14 @@ elif [[ "$typed" == "N" || "$typed" == "n" ]]; then mountsmenu
     statusmount
   fi
 
-  gclone config delete $type --config /opt/rclone/blitz.conf
+  gclone config delete $type --config /pg/rclone/blitz.conf
 
-  encheck=$(cat /opt/rclone/pgclone.transport)
+  encheck=$(cat /pg/rclone/pgclone.transport)
   if [[ "$encheck" == "sc" || "$encheck" == "gc" ]]; then
     if [ "$type" == "gc" ]; then
-    gclone config delete gcrypt --config /opt/rclone/blitz.conf; fi
+    gclone config delete gcrypt --config /pg/rclone/blitz.conf; fi
     if [ "$type" == "sd" ]; then
-    gclone config delete scrypt --config /opt/rclone/blitz.conf; fi
+    gclone config delete scrypt --config /pg/rclone/blitz.conf; fi
   fi
 
 tee <<-EOF
@@ -81,8 +81,8 @@ fi
 
 tmgen() {
 
-secret=$(cat /opt/rclone/pgclone.secret)
-public=$(cat /opt/rclone/pgclone.public)
+secret=$(cat /pg/rclone/pgclone.secret)
+public=$(cat /pg/rclone/pgclone.public)
 
 tee <<-EOF
 
@@ -97,16 +97,16 @@ https://accounts.google.com/o/oauth2/auth?client_id=$public&redirect_uri=urn:iet
 EOF
   read -p '↘️  Token | PRESS [ENTER]: ' token < /dev/tty
   if [ "$token" = "exit" ]; then mountsmenu; fi
-  curl --request POST --data "code=$token&client_id=$public&client_secret=$secret&redirect_uri=urn:ietf:wg:oauth:2.0:oob&grant_type=authorization_code" https://accounts.google.com/o/oauth2/token > /opt/var/pgtokentm.output
-  cat /opt/var/pgtokentm.output | grep access_token | awk '{ print $2 }' | cut -c2- | rev | cut -c3- | rev > /opt/var/pgtokentm2.output
-  primet=$(cat /opt/var/pgtokentm2.output)
-  curl -H "GData-Version: 3.0" -H "Authorization: Bearer $primet" https://www.googleapis.com/drive/v3/teamdrives > /opt/rclone/teamdrive.output
+  curl --request POST --data "code=$token&client_id=$public&client_secret=$secret&redirect_uri=urn:ietf:wg:oauth:2.0:oob&grant_type=authorization_code" https://accounts.google.com/o/oauth2/token > /pg/var/pgtokentm.output
+  cat /pg/var/pgtokentm.output | grep access_token | awk '{ print $2 }' | cut -c2- | rev | cut -c3- | rev > /pg/var/pgtokentm2.output
+  primet=$(cat /pg/var/pgtokentm2.output)
+  curl -H "GData-Version: 3.0" -H "Authorization: Bearer $primet" https://www.googleapis.com/drive/v3/teamdrives > /pg/rclone/teamdrive.output
   tokenscript
 
-  name=$(sed -n ${typed}p /opt/rclone/teamdrive.name)
-  id=$(sed -n ${typed}p /opt/rclone/teamdrive.id)
-echo "$name" > /opt/rclone/pgclone.teamdrive
-echo "$id" > /opt/rclone/pgclone.teamid
+  name=$(sed -n ${typed}p /pg/rclone/teamdrive.name)
+  id=$(sed -n ${typed}p /pg/rclone/teamdrive.id)
+echo "$name" > /pg/rclone/pgclone.teamdrive
+echo "$id" > /pg/rclone/pgclone.teamid
 tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -118,8 +118,8 @@ EOF
 }
 
 tokenscript () {
-  cat /opt/rclone/teamdrive.output | grep "id" | awk '{ print $2 }' | cut -c2- | rev | cut -c3- | rev > /opt/rclone/teamdrive.id
-  cat /opt/rclone/teamdrive.output | grep "name" | awk '{ print $2 }' | cut -c2- | rev | cut -c2- | rev > /opt/rclone/teamdrive.name
+  cat /pg/rclone/teamdrive.output | grep "id" | awk '{ print $2 }' | cut -c2- | rev | cut -c3- | rev > /pg/rclone/teamdrive.id
+  cat /pg/rclone/teamdrive.output | grep "name" | awk '{ print $2 }' | cut -c2- | rev | cut -c2- | rev > /pg/rclone/teamdrive.name
 
 tee <<-EOF
 
@@ -131,9 +131,9 @@ EOF
   A=0
   while read p; do
   ((A++))
-  name=$(sed -n ${A}p /opt/rclone/teamdrive.name)
+  name=$(sed -n ${A}p /pg/rclone/teamdrive.name)
   echo "[$A] $p - $name"
-done </opt/rclone/teamdrive.id
+done </pg/rclone/teamdrive.id
 
 echo ""
 read -p '↘️  Type Number | PRESS [ENTER]: ' typed < /dev/tty
@@ -190,10 +190,10 @@ https://accounts.google.com/o/oauth2/auth?client_id=$public&redirect_uri=urn:iet
 EOF
   read -p '↘️  Token | PRESS [ENTER]: ' token < /dev/tty
   if [ "$token" = "exit" ]; then mountsmenu; fi
-  curl --request POST --data "code=$token&client_id=$public&client_secret=$secret&redirect_uri=urn:ietf:wg:oauth:2.0:oob&grant_type=authorization_code" https://accounts.google.com/o/oauth2/token > /opt/rclone/pgclone.info
+  curl --request POST --data "code=$token&client_id=$public&client_secret=$secret&redirect_uri=urn:ietf:wg:oauth:2.0:oob&grant_type=authorization_code" https://accounts.google.com/o/oauth2/token > /pg/rclone/pgclone.info
 
-  accesstoken=$(cat /opt/rclone/pgclone.info | grep access_token | awk '{print $2}')
-  refreshtoken=$(cat /opt/rclone/pgclone.info | grep refresh_token | awk '{print $2}')
+  accesstoken=$(cat /pg/rclone/pgclone.info | grep access_token | awk '{print $2}')
+  refreshtoken=$(cat /pg/rclone/pgclone.info | grep refresh_token | awk '{print $2}')
   rcdate=$(date +'%Y-%m-%d')
   rctime=$(date +"%H:%M:%S" --date="$givenDate 60 minutes")
   rczone=$(date +"%:z")
@@ -205,22 +205,22 @@ EOF
 mountsmenu () {
 
 # Sets Display Status if Passwords are not set for the encryhpted edition
-check5=$(cat /opt/rclone/pgclone.password)
-check6=$(cat /opt/rclone/pgclone.salt)
+check5=$(cat /pg/rclone/pgclone.password)
+check6=$(cat /pg/rclone/pgclone.salt)
 if [[ "$check5" == "" || "$check6" == "" ]]; then passdisplay="⚠️  Not Activated"
 else passdisplay="✅ Activated"; fi
 
-projectid=$(cat /opt/rclone/pgclone.project)
-secret=$(cat /opt/rclone/pgclone.secret)
-public=$(cat /opt/rclone/pgclone.public)
-teamdrive=$(cat /opt/rclone/pgclone.teamdrive)
+projectid=$(cat /pg/rclone/pgclone.project)
+secret=$(cat /pg/rclone/pgclone.secret)
+public=$(cat /pg/rclone/pgclone.public)
+teamdrive=$(cat /pg/rclone/pgclone.teamdrive)
 
 if [ "$secret" == "" ]; then dsecret="NOT SET"; else dsecret="SET"; fi
 if [ "$public" == "" ]; then dpublic="NOT SET"; else dpublic="SET"; fi
 if [ "$teamdrive" == "" ]; then dteamdrive="NOT SET"; else dteamdrive=$teamdrive; fi
 
-gdstatus=$(cat /opt/var/gd.pgclone)
-sdstatus=$(cat /opt/var/sd.pgclone)
+gdstatus=$(cat /pg/var/gd.pgclone)
+sdstatus=$(cat /pg/var/sd.pgclone)
 
 ###### START
 if [ "$transport" == "PG Move /w No Encryption" ]; then
@@ -345,7 +345,7 @@ elif [ "$typed" == "4" ]; then
   inputphase
   mountsmenu
 elif [ "$typed" == "5" ]; then
-  tmcheck=$(cat /opt/rclone/pgclone.teamdrive)
+  tmcheck=$(cat /pg/rclone/pgclone.teamdrive)
   if [ "$tmcheck" == "" ]; then
 tee <<-EOF
 
@@ -412,7 +412,7 @@ elif [ "$typed" == "5" ]; then
   mountsmenu
 elif [ "$typed" == "6" ]; then
   encpasswdcheck
-  tmcheck=$(cat /opt/rclone/pgclone.teamdrive)
+  tmcheck=$(cat /pg/rclone/pgclone.teamdrive)
   if [ "$tmcheck" == "" ]; then
 tee <<-EOF
 
@@ -436,8 +436,8 @@ fi
 }
 
 encpasswdcheck () {
-check5=$(cat /opt/rclone/pgclone.password)
-check6=$(cat /opt/rclone/pgclone.salt)
+check5=$(cat /pg/rclone/pgclone.password)
+check6=$(cat /pg/rclone/pgclone.salt)
 
 if [[ "$check5" == "" || "$check6" == "" ]]; then
 tee <<-EOF
@@ -518,8 +518,8 @@ read -p '↘️  Type y or n | Press [ENTER]: ' typed < /dev/tty
 
 if [ "$typed" == "n" ]; then mountsmenu;
 elif [ "$typed" == "y" ]; then
-echo $bpassword > /opt/rclone/pgclone.password
-echo $bsalt > /opt/rclone/pgclone.salt
+echo $bpassword > /pg/rclone/pgclone.password
+echo $bsalt > /pg/rclone/pgclone.salt
 mountsmenu;
 else
   badinput
@@ -539,7 +539,7 @@ EOF
 
 read -p '↘️  Client ID  | Press [Enter]: ' public < /dev/tty
 if [ "$public" = "exit" ]; then mountsmenu; fi
-echo "$public" > /opt/rclone/pgclone.public
+echo "$public" > /pg/rclone/pgclone.public
 
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -563,7 +563,7 @@ NOTE: Visit reference for Google OAuth Keys!
 EOF
 read -p '↘️  Secret Key  | Press [Enter]: ' secret < /dev/tty
 if [ "$secret" = "exit" ]; then mountsmenu; fi
-echo "$secret" > /opt/rclone/pgclone.secret
+echo "$secret" > /pg/rclone/pgclone.secret
 
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -577,7 +577,7 @@ mountsmenu
 }
 
 projectmenu () {
-projectid=$(cat /opt/rclone/pgclone.project)
+projectid=$(cat /pg/rclone/pgclone.project)
 
 tee <<-EOF
 
@@ -605,8 +605,8 @@ else badinput
 
 projectestablish () {
 
-  gcloud projects list > /opt/var/projects.list
-  projectcheck=(cat /opt/var/projects.list)
+  gcloud projects list > /pg/var/projects.list
+  projectcheck=(cat /pg/var/projects.list)
   if [ "$projectcheck" == "" ]; then
 tee <<-EOF
 
@@ -628,8 +628,8 @@ tee <<-EOF
 Project ID: $projectid
 
 EOF
-  cat /opt/var/projects.list | cut -d' ' -f1 | tail -n +2
-  cat /opt/var/projects.list | cut -d' ' -f1 | tail -n +2 > /opt/var/project.cut
+  cat /pg/var/projects.list | cut -d' ' -f1 | tail -n +2
+  cat /pg/var/projects.list | cut -d' ' -f1 | tail -n +2 > /pg/var/project.cut
   echo
   changeproject
   echo
@@ -650,14 +650,14 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  echo $typed > /opt/rclone/pgclone.project
+  echo $typed > /pg/rclone/pgclone.project
   read -p '↘️  Acknowledge Info | Press [ENTER] ' typed < /dev/tty
   projectmenu
 
 }
 
 transportdisplay () {
-temp=$(cat /opt/rclone/pgclone.transport)
+temp=$(cat /pg/rclone/pgclone.transport)
   if [ "$temp" == "gd" ]; then transport="GDrive Unencrypted"
 elif [ "$temp" == "gc" ]; then transport="GDrive Encrypted"
 elif [ "$temp" == "sd" ]; then transport="SDrive Unencrypted"
@@ -683,15 +683,15 @@ tee <<-EOF
 EOF
 read -p '↘️  Set Choice | Press [ENTER]: ' typed < /dev/tty
 
-  if [ "$typed" == "1" ]; then echo "gd" > /opt/rclone/pgclone.transport && echo;
-elif [ "$typed" == "2" ]; then echo "gc" > /opt/rclone/pgclone.transport && echo;
-elif [ "$typed" == "3" ]; then echo "sd" > /opt/rclone/pgclone.transport && echo;
-elif [ "$typed" == "4" ]; then echo "sc" > /opt/rclone/pgclone.transport && echo;
-elif [ "$typed" == "5" ]; then echo "solohd" > /opt/rclone/pgclone.transport && echo;
+  if [ "$typed" == "1" ]; then echo "gd" > /pg/rclone/pgclone.transport && echo;
+elif [ "$typed" == "2" ]; then echo "gc" > /pg/rclone/pgclone.transport && echo;
+elif [ "$typed" == "3" ]; then echo "sd" > /pg/rclone/pgclone.transport && echo;
+elif [ "$typed" == "4" ]; then echo "sc" > /pg/rclone/pgclone.transport && echo;
+elif [ "$typed" == "5" ]; then echo "solohd" > /pg/rclone/pgclone.transport && echo;
 elif [[ "$typed" == "Z" || "$typed" == "z" ]]; then
 
 # If a New Installer, User Cannot Exit & Must Select a Version
-transport=$(cat /opt/rclone/pgclone.transport)
+transport=$(cat /pg/rclone/pgclone.transport)
 if [ "$transport" == "NOT-SET" ]; then
 transportmode; fi
 
@@ -717,12 +717,12 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  cat /opt/var/projects.list | cut -d' ' -f1 | tail -n +2
-  cat /opt/var/projects.list | cut -d' ' -f1 | tail -n +2 > /opt/var/project.cut
+  cat /pg/var/projects.list | cut -d' ' -f1 | tail -n +2
+  cat /pg/var/projects.list | cut -d' ' -f1 | tail -n +2 > /pg/var/project.cut
   echo ""
   read -p '↘️  Type Project Name | Press [ENTER]: ' typed < /dev/tty
   echo ""
-  list=$(cat /opt/var/project.cut | grep $typed)
+  list=$(cat /pg/var/project.cut | grep $typed)
 
   if [ "$typed" != "$list" ]; then
 tee <<-EOF
@@ -737,37 +737,37 @@ EOF
 }
 
 testphase () {
-  echo "" > /opt/rclone/test.conf
-  echo "[$type]" >> /opt/rclone/test.conf
-  echo "client_id = $public" >> /opt/rclone/test.conf
-  echo "client_secret = $secret" >> /opt/rclone/test.conf
-  echo "type = drive" >> /opt/rclone/test.conf
-  echo -n "token = {\"access_token\":${accesstoken}\"token_type\":\"Bearer\",\"refresh_token\":${refreshtoken}\"expiry\":\"${final}\"}" >> /opt/rclone/test.conf
-  echo "" >> /opt/rclone/test.conf
+  echo "" > /pg/rclone/test.conf
+  echo "[$type]" >> /pg/rclone/test.conf
+  echo "client_id = $public" >> /pg/rclone/test.conf
+  echo "client_secret = $secret" >> /pg/rclone/test.conf
+  echo "type = drive" >> /pg/rclone/test.conf
+  echo -n "token = {\"access_token\":${accesstoken}\"token_type\":\"Bearer\",\"refresh_token\":${refreshtoken}\"expiry\":\"${final}\"}" >> /pg/rclone/test.conf
+  echo "" >> /pg/rclone/test.conf
   if [ "$type" == "sd" ]; then
-  teamid=$(cat /opt/rclone/pgclone.teamid)
-  echo "team_drive = $teamid" >> /opt/rclone/test.conf; fi
+  teamid=$(cat /pg/rclone/pgclone.teamid)
+  echo "team_drive = $teamid" >> /pg/rclone/test.conf; fi
   echo ""
 
 ## Adds Encryption to the Test Phase if Move or Blitz Encrypted is On
-encheck=$(cat /opt/rclone/pgclone.transport)
+encheck=$(cat /pg/rclone/pgclone.transport)
 if [[ "$encheck" == "sc" || "$encheck" == "gc" ]]; then
 
   if [ "$type" == "gdrive" ]; then entype="gcrypt";
   else entype="scrypt"; fi
 
-  PASSWORD=`cat /opt/rclone/pgclone.password`
-  SALT=`cat /opt/rclone/pgclone.salt`
+  PASSWORD=`cat /pg/rclone/pgclone.password`
+  SALT=`cat /pg/rclone/pgclone.salt`
   ENC_PASSWORD=`gclone obscure "$PASSWORD"`
   ENC_SALT=`gclone obscure "$SALT"`
-  echo "" >> /opt/rclone/test.conf
-  echo "[$entype]" >> /opt/rclone/test.conf
-  echo "type = crypt" >> /opt/rclone/test.conf
-  echo "remote = $type:/encrypt" >> /opt/rclone/test.conf
-  echo "filename_encryption = standard" >> /opt/rclone/test.conf
-  echo "directory_name_encryption = true" >> /opt/rclone/test.conf
-  echo "password = $ENC_PASSWORD" >> /opt/rclone/test.conf
-  echo "password2 = $ENC_SALT" >> /opt/rclone/test.conf;
+  echo "" >> /pg/rclone/test.conf
+  echo "[$entype]" >> /pg/rclone/test.conf
+  echo "type = crypt" >> /pg/rclone/test.conf
+  echo "remote = $type:/encrypt" >> /pg/rclone/test.conf
+  echo "filename_encryption = standard" >> /pg/rclone/test.conf
+  echo "directory_name_encryption = true" >> /pg/rclone/test.conf
+  echo "password = $ENC_PASSWORD" >> /pg/rclone/test.conf
+  echo "password2 = $ENC_SALT" >> /pg/rclone/test.conf;
 
 fi
 testphase2
@@ -788,7 +788,7 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
   sleep 1
-  gclone mkdir --config /opt/rclone/test.conf $type:/plexguide
+  gclone mkdir --config /pg/rclone/test.conf $type:/plexguide
 tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -796,7 +796,7 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  rcheck=$(gclone lsd --config /opt/rclone/test.conf $type: | grep -oP plexguide | head -n1)
+  rcheck=$(gclone lsd --config /pg/rclone/test.conf $type: | grep -oP plexguide | head -n1)
 
   if [ "$rcheck" != "plexguide" ];then
 tee <<-EOF
@@ -814,7 +814,7 @@ FOR ENCRYPTION (IF SELECTED)
 1. Did You Set a Password?
 
 EOF
-    echo "⚠️  Not Activated" > /opt/var/$type.pgclone
+    echo "⚠️  Not Activated" > /pg/var/$type.pgclone
     read -p '↘️  Acknowledge Info | Press [ENTER] ' typed2 < /dev/tty
     question1
 else
@@ -828,10 +828,10 @@ EOF
 fi
 
 read -p '↘️  Acknowledge Info | Press [ENTER] ' typed2 < /dev/tty
-echo "✅ Activated" > /opt/var/$type.pgclone
+echo "✅ Activated" > /pg/var/$type.pgclone
 
 ## Copy the Test File to the Real RClone Conf
-cat /opt/rclone/test.conf >> /opt/rclone/blitz.conf
+cat /pg/rclone/test.conf >> /pg/rclone/blitz.conf
 
 ## Back to the Main Mount Menu
 mountsmenu
@@ -840,9 +840,9 @@ EOF
 }
 
 deploychecks () {
-secret=$(cat /opt/rclone/pgclone.secret)
-public=$(cat /opt/rclone/pgclone.public)
-teamdrive=$(cat /opt/rclone/pgclone.teamdrive)
+secret=$(cat /pg/rclone/pgclone.secret)
+public=$(cat /pg/rclone/pgclone.public)
+teamdrive=$(cat /pg/rclone/pgclone.teamdrive)
 
 if [ "$secret" == "" ]; then
 tee <<-EOF

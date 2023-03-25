@@ -22,10 +22,10 @@ startscript () {
 while read p; do
 
 # Repull excluded folder
- wget -qN https://raw.githubusercontent.com/PGBlitz/PGClone/v8.6/functions/exclude -P /opt/var/
+ wget -qN https://raw.githubusercontent.com/PGBlitz/PGClone/v8.6/functions/exclude -P /pg/var/
 
-  cleaner="$(cat /opt/var/cloneclean)"
-  useragent="$(cat /opt/var/uagent)"
+  cleaner="$(cat /pg/var/cloneclean)"
+  useragent="$(cat /pg/var/uagent)"
 
   let "cyclecount++"
   echo "----------------------------" >> /opt/logs/pgblitz.log
@@ -34,7 +34,7 @@ while read p; do
   echo "Utilizing: $p" >> /opt/logs/pgblitz.log
 
   gclone moveto "{{hdpath}}/downloads/" "{{hdpath}}/transfer/" \
-  --config /opt/rclone/blitz.conf \
+  --config /pg/rclone/blitz.conf \
   --log-file=/opt/logs/pgblitz.log \
   --log-level ERROR --stats 5s --stats-file-name-length 0 \
   --exclude="**_HIDDEN~" --exclude=".unionfs/**" \
@@ -51,7 +51,7 @@ while read p; do
   chmod -R 775 "{{hdpath}}/move"
 
   gclone moveto "{{hdpath}}/move" "${p}{{encryptbit}}:/" \
-  --config /opt/rclone/blitz.conf \
+  --config /pg/rclone/blitz.conf \
   --log-file=/opt/logs/pgblitz.log \
   --log-level INFO --stats 5s --stats-file-name-length 0 \
   --tpslimit 12 \
@@ -85,10 +85,10 @@ while read p; do
   find "{{hdpath}}/transfer/" -mindepth 2 -type d -mmin +2 -empty -exec rm -rf {} \;
 
   # Removes garbage | torrent folder excluded
-  find "{{hdpath}}/downloads" -mindepth 2 -type d -cmin +$cleaner  $(printf "! -name %s " $(cat /opt/var/exclude)) -empty -exec rm -rf {} \;
-  find "{{hdpath}}/downloads" -mindepth 2 -type f -cmin +$cleaner  $(printf "! -name %s " $(cat /opt/var/exclude)) -size +1M -exec rm -rf {} \;
+  find "{{hdpath}}/downloads" -mindepth 2 -type d -cmin +$cleaner  $(printf "! -name %s " $(cat /pg/var/exclude)) -empty -exec rm -rf {} \;
+  find "{{hdpath}}/downloads" -mindepth 2 -type f -cmin +$cleaner  $(printf "! -name %s " $(cat /pg/var/exclude)) -size +1M -exec rm -rf {} \;
 
-done </opt/var/.blitzfinal
+done </pg/var/.blitzfinal
 }
 
 # keeps the function in a loop

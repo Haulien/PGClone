@@ -81,15 +81,15 @@ pgclonevars
 
 # pull throttle speeds based on role
 if [[ "$transport" == "gd" || "$transport" == "gc" ]]; then
-throttle=$(cat /opt/var/move.bw)
+throttle=$(cat /pg/var/move.bw)
 output1="[C] Transport Select"
 else
-throttle=$(cat /opt/var/blitz.bw)
+throttle=$(cat /pg/var/blitz.bw)
 output1="[C] Options"
 fi
 
 if [[ "$transport" != "gd" && "$transport" != "gc" && "$transport" != "sd" && "$transport" != "sc" && "$transport" != "le" ]]; then
-rm -rf /opt/rclone/pgclone.transport 1>/dev/null 2>&1
+rm -rf /pg/rclone/pgclone.transport 1>/dev/null 2>&1
 mustset; fi
 
     if [[ "$transport" == "gd" ]]; then outputversion="GDrive Unencrypted"
@@ -169,7 +169,7 @@ if [[ "$transport" == "gd" ]]; then
           keyinputpublic ;;
       2 )
           publicsecretchecker
-          echo "gd" > /opt/rclone/deploy.version
+          echo "gd" > /pg/rclone/deploy.version
           oauth ;;
       z )
           exit ;;
@@ -206,7 +206,7 @@ elif [[ "$transport" == "gc" ]]; then
       3 )
           publicsecretchecker
           passwordcheck
-          echo "gd" > /opt/rclone/deploy.version
+          echo "gd" > /pg/rclone/deploy.version
           oauth ;;
       z )
           exit ;;
@@ -249,11 +249,11 @@ elif [[ "$transport" == "sd" ]]; then
         5 )
             publicsecretchecker
             tlabelchecker
-            echo "sd" > /opt/rclone/deploy.version
+            echo "sd" > /pg/rclone/deploy.version
             oauth ;;
         6 )
             publicsecretchecker
-            echo "gd" > /opt/rclone/deploy.version
+            echo "gd" > /pg/rclone/deploy.version
             oauth ;;
         7 )
             publicsecretchecker
@@ -318,12 +318,12 @@ elif [[ "$transport" == "sc" ]]; then
             publicsecretchecker
             passwordcheck
             tlabelchecker
-            echo "sc" > /opt/rclone/deploy.version
+            echo "sc" > /pg/rclone/deploy.version
             oauth ;;
         7 )
             publicsecretchecker
             passwordcheck
-            echo "sc" > /opt/rclone/deploy.version
+            echo "sc" > /pg/rclone/deploy.version
             oauth ;;
 
         8 )
@@ -479,8 +479,8 @@ optionsmenu
 }
 
 demomode () {
-  if [[ "$demo" = "OFF" ]]; then echo "ON " > /opt/rclone/pgclone.demo
-  else echo "OFF" > /opt/rclone/pgclone.demo; fi
+  if [[ "$demo" = "OFF" ]]; then echo "ON " > /pg/rclone/pgclone.demo
+  else echo "OFF" > /pg/rclone/pgclone.demo; fi
 
 pgclonevars
 tee <<-EOF

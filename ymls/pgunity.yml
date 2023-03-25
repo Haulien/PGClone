@@ -65,34 +65,34 @@
         - 'incomplete'
 
     - name: Transport Type
-      shell: 'echo "" >> /opt/rclone/blitz.conf'
+      shell: 'echo "" >> /pg/rclone/blitz.conf'
 
     - name: Line Rmur
-      shell: 'sed -i -e "/\[(unionfs|pgunity)\]/,+2d" /opt/rclone/blitz.conf'
+      shell: 'sed -i -e "/\[(unionfs|pgunity)\]/,+2d" /pg/rclone/blitz.conf'
 
     - name: Transport Type
       shell: |
-        echo "[pgunity]" >> /opt/rclone/blitz.conf
-        echo "type = union" >> /opt/rclone/blitz.conf
-        echo "{{path}}" >> /opt/rclone/blitz.conf
+        echo "[pgunity]" >> /pg/rclone/blitz.conf
+        echo "type = union" >> /pg/rclone/blitz.conf
+        echo "{{path}}" >> /pg/rclone/blitz.conf
 
     - name: 'PG Blitz Execution'
       block:
 
         - name: Bandwidth Limit
-          shell: 'cat /opt/var/blitz.bw'
+          shell: 'cat /pg/var/blitz.bw'
           register: bandwidth
 
         - name: Install Transfer Script
           template:
             src: /opt/pgclone/source/transfer.sh
-            dest: /opt/rclone/transfer.sh
+            dest: /pg/rclone/transfer.sh
             force: yes
 
         - name: Install Loop Script
           template:
             src: /opt/pgclone/source/loop.sh
-            dest: /opt/rclone/loop.sh
+            dest: /pg/rclone/loop.sh
             force: yes
 
         - name: Install Transfer Service
@@ -114,27 +114,27 @@
     - name: 'PG Move Execution'
       block:
         - name: Bandwidth Limit
-          shell: 'cat /opt/var/move.bw'
+          shell: 'cat /pg/var/move.bw'
           register: bandwidth
 
         - name: Deploy Version
-          shell: 'cat /opt/rclone/deploy.version'
+          shell: 'cat /pg/rclone/deploy.version'
           register: ver
 
         - name: Register HD Path
-          shell: 'cat /opt/var/server.hd.path'
+          shell: 'cat /pg/var/server.hd.path'
           register: hdpath
 
         - name: Install Transfer Script
           template:
             src: /opt/pgclone/source/transfer.sh
-            dest: /opt/rclone/transfer.sh
+            dest: /pg/rclone/transfer.sh
             force: yes
 
         - name: Install Loop Script
           template:
             src: /opt/pgclone/source/loop.sh
-            dest: /opt/rclone/loop.sh
+            dest: /pg/rclone/loop.sh
             force: yes
 
         - name: Install Transfer Service
@@ -156,7 +156,7 @@
     - name: Install PGUnity Script
       template:
         src: /opt/pgclone/source/pgunity.sh
-        dest: /opt/rclone/pgunity.sh
+        dest: /pg/rclone/pgunity.sh
         force: yes
 
     - name: Install PGUnity Service
@@ -179,7 +179,7 @@
         delay: 2
 
     - name: Register HD Path
-      shell: 'cat /opt/var/server.hd.path'
+      shell: 'cat /pg/var/server.hd.path'
       register: hdpath
 
     - name: Restart All Docker Containers

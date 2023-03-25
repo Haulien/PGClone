@@ -14,7 +14,7 @@ Type=simple
 User=0
 Group=0
 ExecStart=/usr/bin/gclone mount {{drive}}: /opt/{{drive}} \
---config /opt/rclone/blitz.conf \
+--config /pg/rclone/blitz.conf \
 --allow-non-empty \
 --allow-other \
 --size-only \

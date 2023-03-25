@@ -17,19 +17,19 @@ touch /opt/logs/transfer.log
 touch /opt/logs/.transfer_list
 touch /opt/logs/.temp_list
 
-basicpath="$(cat /opt/var/server.hd.path)"
-useragent="$(cat /opt/var/uagent)"
-bwg="$(cat /opt/var/move.bw)"
-bws="$(cat /opt/var/blitz.bw)"
+basicpath="$(cat /pg/var/server.hd.path)"
+useragent="$(cat /pg/var/uagent)"
+bwg="$(cat /pg/var/move.bw)"
+bws="$(cat /pg/var/blitz.bw)"
 
-var3=$(cat /opt/rclone/deployed.version)
+var3=$(cat /pg/rclone/deployed.version)
 if [[ "$var3" == "gd" ]]; then var4="gdrive"
 elif [[ "$var3" == "gc" ]]; then var4="gdrive"
 elif [[ "$var3" == "sd" ]]; then var4="sdrive"
 elif [[ "$var3" == "sd" ]]; then var4="sdrive"; fi
 
 filecount=$(wc -l /opt/logs/.transfer_list | awk '{print $1}')
-echo "$filecount" > /opt/var/filecount
+echo "$filecount" > /pg/var/filecount
 
 if [[ "$filecount" -gt 8 ]]; then
 echo "Max Files of [8] Files - Pending Transfer" >> /opt/logs/transfer.log
@@ -60,10 +60,10 @@ chmod 775 "$uploadfile"
 
 if [[ "$var4" == "gdrive" ]]; then
   echo "Started Upload - $var3: $uploadfile" >> /opt/logs/transfer.log
-  udrive=$(cat /opt/rclone/deployed.version)
+  udrive=$(cat /pg/rclone/deployed.version)
 
     gclone move "$uploadfile" "$udrive:/$truepath" \
-    --config /opt/rclone/blitz.conf \
+    --config /pg/rclone/blitz.conf \
     --log-file=/opt/logs/transfer.log \
     --log-level INFO --stats 5s --stats-file-name-length 0 \
     --tpslimit 6 \
@@ -76,13 +76,13 @@ if [[ "$var4" == "gdrive" ]]; then
     --exclude=".fuse_hidden**" --exclude="**.grab/**"
 else
   echo "Started Shared Upload - $var3: $uploadfile" >> /opt/logs/transfer.log
-  readykey=$(cat /opt/rclone/currentkey)
-  uread=$(cat /opt/rclone/deployed.version)
+  readykey=$(cat /pg/rclone/currentkey)
+  uread=$(cat /pg/rclone/deployed.version)
   encryptbit=""
   if [[ "$uread" == "sc" ]]; then encryptbit="C"; fi
 
     gclone move "$uploadfile" "${readykey}${encryptbit}:/$truepath" \
-    --config /opt/rclone/blitz.conf \
+    --config /pg/rclone/blitz.conf \
     --log-file=/opt/logs/pgblitz.log \
     --log-level INFO --stats 5s --stats-file-name-length 0 \
     --tpslimit 12 \
