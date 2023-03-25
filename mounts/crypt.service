@@ -13,7 +13,7 @@ After=multi-user.target
 Type=simple
 User=0
 Group=0
-ExecStart=/usr/bin/gclone mount {{drive}}: /opt/{{drive}} \
+ExecStart=/usr/bin/gclone mount {{drive}}: /mnt/{{drive}} \
 --config /pg/rclone/blitz.conf \
 --allow-non-empty \
 --allow-other \
@@ -33,7 +33,7 @@ ExecStart=/usr/bin/gclone mount {{drive}}: /opt/{{drive}} \
 --user-agent={{uagent.stdout}} \
 --buffer-size {{bs}}
 
-ExecStop=/bin/fusermount -uz /opt/{{drive}}
+ExecStop=/bin/fusermount -uz /mnt/{{drive}}
 TimeoutStopSec=20
 KillMode=process
 RemainAfterExit=yes
