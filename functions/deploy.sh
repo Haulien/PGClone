@@ -57,6 +57,8 @@ EOF
 if [ -e "/opt/logs/.drivelog" ]; then rm -rf /opt/logs/.drivelog; fi
 touch /opt/logs/.drivelog
 
+transport=$(cat /pg/rclone/pgclone.transport)
+
   if [[ "$transport" = "gd" ]]; then
     gdrivemod
     multihdreadonly
