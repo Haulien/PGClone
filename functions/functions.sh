@@ -102,7 +102,7 @@ readrcloneconfig () {
   touch /pg/rclone/blitz.conf
   mkdir -p /pg/rclone/
 
-  gdcheck=$(cat /pg/rclone/blitz.conf | grep gdrive)
+  gdcheck=$(cat /pg/rclone/blitz.conf | grep gd)
   if [ "$gdcheck" != "" ]; then echo "good" > /pg/rclone/gdrive.status && gdstatus="good";
   else echo "bad" > /pg/rclone/gdrive.status && gdstatus="bad"; fi
 
@@ -110,7 +110,7 @@ readrcloneconfig () {
   if [ "$gccheck" != "" ]; then echo "good" > /pg/rclone/gcrypt.status && gcstatus="good";
   else echo "bad" > /pg/rclone/gcrypt.status && gcstatus="bad"; fi
 
-  tdcheck=$(cat /pg/rclone/blitz.conf | grep sdrive)
+  tdcheck=$(cat /pg/rclone/blitz.conf | grep sd)
   if [ "$tdcheck" != "" ]; then echo "good" > /pg/rclone/sdrive.status && tdstatus="good"
   else echo "bad" > /pg/rclone/sdrive.status && tdstatus="bad"; fi
 
