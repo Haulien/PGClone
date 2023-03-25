@@ -10,7 +10,7 @@
   gather_facts: false
   tasks:
     - name: include PGClone aliases
-      include_tasks: '/pg/pgclone/ymls/alias.yml'
+      include_tasks: '/opt/pgclone/ymls/alias.yml'
 
     - debug: msg="PGBlitz Type - {{transport}}"
     - debug: msg="HD Path - {{hdpath}}"
@@ -85,19 +85,19 @@
 
         - name: Install Transfer Script
           template:
-            src: /pg/pgclone/source/transfer.sh
+            src: /opt/pgclone/source/transfer.sh
             dest: /pg/rclone/transfer.sh
             force: yes
 
         - name: Install Loop Script
           template:
-            src: /pg/pgclone/source/loop.sh
+            src: /opt/pgclone/source/loop.sh
             dest: /pg/rclone/loop.sh
             force: yes
 
         - name: Install Transfer Service
           template:
-            src: /pg/pgclone/mounts/transfer.service
+            src: /opt/pgclone/mounts/transfer.service
             dest: /etc/systemd/system/transfer.service
             force: yes
 
@@ -127,19 +127,19 @@
 
         - name: Install Transfer Script
           template:
-            src: /pg/pgclone/source/transfer.sh
+            src: /opt/pgclone/source/transfer.sh
             dest: /pg/rclone/transfer.sh
             force: yes
 
         - name: Install Loop Script
           template:
-            src: /pg/pgclone/source/loop.sh
+            src: /opt/pgclone/source/loop.sh
             dest: /pg/rclone/loop.sh
             force: yes
 
         - name: Install Transfer Service
           template:
-            src: /pg/pgclone/mounts/transfer.service
+            src: /opt/pgclone/mounts/transfer.service
             dest: /etc/systemd/system/transfer.service
             force: yes
 
@@ -155,13 +155,13 @@
 
     - name: Install PGUnity Script
       template:
-        src: /pg/pgclone/source/pgunity.sh
+        src: /opt/pgclone/source/pgunity.sh
         dest: /pg/rclone/pgunity.sh
         force: yes
 
     - name: Install PGUnity Service
       template:
-        src: /pg/pgclone/mounts/pgunity.service
+        src: /opt/pgclone/mounts/pgunity.service
         dest: /etc/systemd/system/pgunity.service
         force: yes
 

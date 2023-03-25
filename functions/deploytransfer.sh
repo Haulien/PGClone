@@ -17,12 +17,12 @@ rm -rf  /pg/rclone/deployed.version
 pgclonevars
 
 # to remove all service running prior to ensure a clean launch
-ansible-playbook /pg/pgclone/ymls/remove.yml
+ansible-playbook /opt/pgclone/ymls/remove.yml
 
 ########################################################### GDRIVE START
 echo "gd" > /pg/rclone/deployed.version
 type=gd
-ansible-playbook /pg/pgclone/ymls/mount.yml -e "\
+ansible-playbook /opt/pgclone/ymls/mount.yml -e "\
   bs=$bs
   dcs=$dcs
   dct=$dct
@@ -37,7 +37,7 @@ if [[ "$transport" == "gc" || "$transport" == "sc" || "$transport" == "sd" ]]; t
 type=sd
 echo "sd" > /pg/rclone/deployed.version
 encryptbit=""
-ansible-playbook /pg/pgclone/ymls/mount.yml -e "\
+ansible-playbook /opt/pgclone/ymls/mount.yml -e "\
   bs=$bs
   dcs=$dcs
   dct=$dct
@@ -53,7 +53,7 @@ fi
 if [[ "$transport" == "gc" || "$transport" == "sc" ]]; then
 echo "gc" > /pg/rclone/deployed.version
 type=gc
-ansible-playbook /pg/pgclone/ymls/crypt.yml -e "\
+ansible-playbook /opt/pgclone/ymls/crypt.yml -e "\
   bs=$bs
   dcs=$dcs
   dct=$dct
@@ -67,7 +67,7 @@ if [[ "$transport" == "sc" ]]; then
 echo "sc" > /pg/rclone/deployed.version
 type=sc
 encryptbit="C"
-ansible-playbook /pg/pgclone/ymls/crypt.yml -e "\
+ansible-playbook /opt/pgclone/ymls/crypt.yml -e "\
   bs=$bs
   dcs=$dcs
   dct=$dct
@@ -91,7 +91,7 @@ if [[ "$transport" == "sd" || "$transport" == "sc" ]]; then
 fi
 
 # deploy union
-ansible-playbook /pg/pgclone/ymls/pgunity.yml -e "\
+ansible-playbook /opt/pgclone/ymls/pgunity.yml -e "\
   transport=$transport
   encryptbit=$encryptbit
   multihds=$multihds
