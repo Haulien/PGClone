@@ -20,7 +20,7 @@ multihdreadonly () {
        if [[ "$p" != "" ]]; then
          echo -n "$p=NC:" >> /pg/var/.tmp.multihd
          chown -R 1000:1000 "$p"
-         chmod -R 755 "$p"
+         chmod -R 775 "$p"
        fi
 
     done </pg/var/multihd.paths
